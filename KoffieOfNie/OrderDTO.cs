@@ -9,10 +9,8 @@ namespace KoffieOfNie
 {
     public class OrderDTO
     {
-        public string name { get; set; }
         public string coffeeType { get; set; }
         public string sugar { get; set; }
         public string milk { get; set; }
-
     }
 }

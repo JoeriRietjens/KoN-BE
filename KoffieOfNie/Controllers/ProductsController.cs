@@ -49,7 +49,7 @@ namespace KoffieOfNie.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutProduct(int id, Product product)
         {
-            if (id != product.id)
+            if (id != product.Id)
             {
                 return BadRequest();
             }
@@ -78,25 +78,28 @@ namespace KoffieOfNie.Controllers
         // POST: api/Products
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
-        [HttpPost]
-        public IActionResult post([FromBody] OrderDTO i )
+        [HttpPost]        
+        public IActionResult post([FromBody] ProductDTO productDTO)
         {
-            
-                User user = new User() { Name = i.name };
-                var result = _context.Users.Add(user);
-                _context.SaveChanges();
-                int userId = result.Entity.Id;
+            //Creates an user who placed the order.
+            User user = new User() { Name = productDTO.username };  
+            var result = _context.Users.Add(user);
+            _context.SaveChanges();
+            int userId = result.Entity.Id;
 
-                OrderList orderList = new OrderList();
-                var result2 = _context.Orders.Add(orderList);
-                _context.SaveChanges();
-                int orderId = result2.Entity.Id;
+            //Creates an order with the id of the user that just has been made.
+            Order order = new Order() { UserId = userId }; 
+            var result2 = _context.Orders.Add(order);
+            _context.SaveChanges();
+            int orderId = result2.Entity.Id;
 
-                Product product = new Product() { ProductType = i.coffeeType, Sugar = i.sugar, Milk = i.milk, UserId = userId, OrderId = orderId};
+            //Creates an product with the orderId that just has been made.
+            foreach (var i in productDTO.products)
+            {
+                Product product = new Product() { ProductType = i.coffeeType, Sugar = i.sugar, Milk = i.milk };
                 _context.Products.Add(product);
                 _context.SaveChanges();
-
-           
+            }               
             
             return Ok();
         }
@@ -128,7 +131,7 @@ namespace KoffieOfNie.Controllers
 
         private bool ProductExists(int id)
         {
-            return _context.Products.Any(e => e.id == id);
+            return _context.Products.Any(e => e.Id == id);
         }
     }
 }
