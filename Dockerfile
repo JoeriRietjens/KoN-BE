@@ -4,7 +4,7 @@ WORKDIR /app
 
 COPY *.sln .
 COPY KoffieOfNie/*.csproj ./KoffieOfNie/
-COPY EFDataAccessLibrary/*.csproj ./EFDataAccessLibrary/
+COPY BLL/*.csproj ./BLL/
 RUN dotnet restore
 
 COPY . ./
