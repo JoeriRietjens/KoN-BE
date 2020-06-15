@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using BLL;
 using BLL.Context;
 using Microsoft.AspNetCore.Cors;
+using System.Runtime.InteropServices;
 
 namespace KoffieOfNie.Controllers
 {
@@ -23,6 +24,29 @@ namespace KoffieOfNie.Controllers
         }
 
         // GET: api/Products
+        //[HttpGet]
+        //public async Task<IActionResult> GetUserWithOrderWithProducts([FromQuery] int userId)
+        //{
+        //    var user = await _context.Users.FindAsync(userId);
+
+        //    var order = await _context.Orders.FirstOrDefaultAsync(order => order.UserId == userId);
+
+        //    var products = await _context.Products.Where(product => product.OrderId == order.Id).ToListAsync();
+
+        //    //var result = _context.Products.Where( x => x.OrderId ==  Order.Id).ToList();
+            
+        //    return Ok();  
+        //}
+        
+        [HttpGet("all")]
+        public async Task<IActionResult> GetAll()
+        {
+            var result = await _context.Users.Include(user => user.Orders).ThenInclude(order => order.products).ToListAsync();
+
+            return Ok(result);
+        }
+
+
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Product>>> GetProducts()
         {
@@ -96,7 +120,7 @@ namespace KoffieOfNie.Controllers
             //Creates an product with the orderId that just has been made.
             foreach (var i in productDTO.products)
             {
-                Product product = new Product() { ProductType = i.coffeeType, Sugar = i.sugar, Milk = i.milk };
+                Product product = new Product() { ProductType = i.coffeeType, Sugar = i.sugar, Milk = i.milk, OrderId = orderId };
                 _context.Products.Add(product);
                 _context.SaveChanges();
             }               

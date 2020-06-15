@@ -5,10 +5,11 @@ using System.Text;
 
 namespace BLL
 {
-   public class Order
-   {
+    public class Order
+    {
         [Key]
         public int Id { get; set; }
         public int UserId { get; set; }
+        public List<Product> products {get; set;}
    }
 }
