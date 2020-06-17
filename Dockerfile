@@ -8,6 +8,7 @@ COPY BLL/*.csproj ./BLL/
 RUN dotnet restore
 
 COPY . ./
+RUN dotnet test
 WORKDIR /app/KoffieOfNie
 RUN dotnet publish -c Release -o out
 
